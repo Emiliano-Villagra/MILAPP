@@ -1,0 +1,53 @@
+/* milapp/src/index.css */
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap');
+
+:root {
+  --blue: #0a4da6;
+  --orange: #f2811d;
+  --gold: #f2b749;
+  --cream: #f2ebdc;
+  --red: #731702;
+  --green: #1a6b35;
+
+  /* Colores para las sombras (azul como base) */
+  --blue-shadow: rgba(10, 77, 166, 0.2);
+}
+
+body {
+  margin: 0;
+  background-color: var(--cream);
+  color: #333;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  margin: 0 0 1rem;
+}
+
+/* Clases de utilidad básicas */
+.bg-blue {
+  background-color: var(--blue);
+}
+.text-cream {
+  color: var(--cream);
+}
+.btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s;
+  border: none;
+}
+.btn-primary {
+  background-color: var(--orange);
+  color: white;
+}
+.btn-primary:hover {
+  background-color: #d16a0d;
+}
+/* ... etc */
