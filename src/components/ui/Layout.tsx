@@ -1,8 +1,9 @@
-import { NavLink, Outlet } from 'react-router-dom';
+import { ReactNode } from 'react';
+import { NavLink } from 'react-router-dom';
 import { useAppStore } from '@/store/appStore';
 import './Layout.css';
 
-export default function Layout() {
+export default function Layout({ children }: { children: ReactNode }) {
   const { user, profile } = useAppStore();
 
   return (
@@ -18,8 +19,8 @@ export default function Layout() {
       </header>
 
       <main className="main-content">
-        {/* LA VENTANA: Outlet es el proyector que muestra la página que corresponda */}
-        <Outlet />
+        {/* Acá se inserta la página que corresponda */}
+        {children}
       </main>
 
       <nav className="bottom-nav bg-blue">
@@ -27,7 +28,6 @@ export default function Layout() {
         <NavLink to="/promos" className={({isActive}) => isActive ? 'nav-item active' : 'nav-item'}>🔥 Promos</NavLink>
         <NavLink to="/comunidad" className={({isActive}) => isActive ? 'nav-item active' : 'nav-item'}>👥 Red</NavLink>
         
-        {/* LA CERRADURA: Botón de Admin solo para vos */}
         {profile?.role === 'superadmin' && (
           <NavLink to="/admin" className={({isActive}) => isActive ? 'nav-item active' : 'nav-item'}>⚙️ Admin</NavLink>
         )}
