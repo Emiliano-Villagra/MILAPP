@@ -1,66 +1,37 @@
-// PerfilPage.tsx
-import { useNavigate } from 'react-router-dom'
-import { useAppStore } from '@/store/appStore'
-import { LogOut, Heart, Star, User, Crown } from 'lucide-react'
-import styles from './PerfilPage.module.css'
+import { useAppStore } from '@/store/appStore';
+import { supabase } from '@/lib/supabase';
+import { useNavigate } from 'react-router-dom';
 
 export default function PerfilPage() {
-  const { profile, signOut } = useAppStore()
-  const navigate = useNavigate()
+  const { profile, signOut } = useAppStore();
+  const navigate = useNavigate();
 
-  if (!profile) {
-    return (
-      <div className={styles.page}>
-        <div className={styles.noAuth}>
-          <User size={40} className={styles.noAuthIcon} />
-          <h2>Ingresá para ver tu perfil</h2>
-          <p>Guardá tus sangucherías favoritas, dejá reseñas y accedé a promos exclusivas.</p>
-          <button className={styles.loginBtn} onClick={() => navigate('/auth')}>
-            Iniciar sesión / Registrarse
-          </button>
-        </div>
-      </div>
-    )
-  }
-
-  const roleLabel = { superadmin: 'Super Admin', pro: 'Usuario PRO', basico: 'Usuario Básico' }
-  const roleColor = { superadmin: 'var(--c-red)', pro: 'var(--c-gold)', basico: 'var(--c-text3)' }
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    signOut();
+    navigate('/');
+  };
 
   return (
-    <div className={styles.page}>
-      <div className={styles.card}>
-        <div className={styles.avatar}>
-          {profile.nombre?.[0]?.toUpperCase() ?? profile.email[0].toUpperCase()}
-        </div>
-        <h2 className={styles.nombre}>{profile.nombre ?? 'Usuario'}</h2>
-        <p className={styles.email}>{profile.email}</p>
-        <span className={styles.roleBadge} style={{ color: roleColor[profile.role], borderColor: roleColor[profile.role] }}>
-          {profile.role === 'pro' && <Crown size={12} />}
-          {roleLabel[profile.role]}
-        </span>
+    <div style={{ padding: '20px', color: 'var(--dark)' }}>
+      <h1 style={{ marginBottom: '20px', fontFamily: 'Syne' }}>Mi Perfil</h1>
+      
+      <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '12px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+        <p><strong>Nombre:</strong> {profile?.nombre || 'No asignado'}</p>
+        <p><strong>Email:</strong> {profile?.email}</p>
+        <p><strong>Rol:</strong> <span style={{ color: 'var(--blue)', fontWeight: 'bold' }}>{profile?.role}</span></p>
       </div>
 
-      {profile.role === 'basico' && (
-        <div className={styles.upgradeCard}>
-          <Crown size={20} className={styles.upgradeIcon} />
-          <div>
-            <strong>Actualizá a PRO</strong>
-            <p>Accedé a descuentos exclusivos, promos especiales y más.</p>
-          </div>
-        </div>
-      )}
-
-      <div className={styles.menu}>
-        <button className={styles.menuItem} onClick={() => {}}>
-          <Heart size={18} /> Mis favoritos
-        </button>
-        <button className={styles.menuItem} onClick={() => {}}>
-          <Star size={18} /> Mis reseñas
-        </button>
-        <button className={`${styles.menuItem} ${styles.danger}`} onClick={signOut}>
-          <LogOut size={18} /> Cerrar sesión
-        </button>
-      </div>
+      <button 
+        onClick={handleLogout}
+        style={{ 
+          marginTop: '30px', width: '100%', padding: '15px', 
+          backgroundColor: '#e74c3c', color: 'white', border: 'none', 
+          borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' 
+        }}
+      >
+        Cerrar Sesión
+      </button>
     </div>
-  )
+  );
 }
