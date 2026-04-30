@@ -1,10 +1,8 @@
-import { ReactNode } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Outlet } from 'react-router-dom';
 import { useAppStore } from '@/store/appStore';
 import './Layout.css';
 
-export default function Layout({ children }: { children: ReactNode }) {
-  // Traemos el usuario y el perfil de la memoria global
+export default function Layout() {
   const { user, profile } = useAppStore();
 
   return (
@@ -12,7 +10,6 @@ export default function Layout({ children }: { children: ReactNode }) {
       <header className="header bg-blue text-cream">
         <div className="logo">MILAPP</div>
         
-        {/* Lógica del encabezado: Si no hay usuario, va a Login. Si hay, va a su Perfil */}
         {!user ? (
           <NavLink to="/auth" className="btn btn-primary" style={{padding: '5px 10px', fontSize: '14px', textDecoration: 'none'}}>Login</NavLink>
         ) : (
@@ -21,7 +18,8 @@ export default function Layout({ children }: { children: ReactNode }) {
       </header>
 
       <main className="main-content">
-        {children}
+        {/* LA VENTANA: Outlet es el proyector que muestra la página que corresponda */}
+        <Outlet />
       </main>
 
       <nav className="bottom-nav bg-blue">
@@ -29,7 +27,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         <NavLink to="/promos" className={({isActive}) => isActive ? 'nav-item active' : 'nav-item'}>🔥 Promos</NavLink>
         <NavLink to="/comunidad" className={({isActive}) => isActive ? 'nav-item active' : 'nav-item'}>👥 Red</NavLink>
         
-        {/* LA CERRADURA: Este botón solo se inyecta en el diseño si sos superadmin */}
+        {/* LA CERRADURA: Botón de Admin solo para vos */}
         {profile?.role === 'superadmin' && (
           <NavLink to="/admin" className={({isActive}) => isActive ? 'nav-item active' : 'nav-item'}>⚙️ Admin</NavLink>
         )}
