@@ -28,6 +28,7 @@ export type Local = {
   provincia?: string;
   tags?: string[];
   tiene_delivery?: boolean;
+  tiene_local_fisico?: boolean;
   verificado?: boolean;
   activo?: boolean;
   foto_portada?: string;
