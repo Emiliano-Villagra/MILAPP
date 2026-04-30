@@ -5,10 +5,6 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-// ==========================================
-// DEFINICIÓN DE TIPOS (EL PLANO MAESTRO)
-// ==========================================
-
 export type UserRole = 'superadmin' | 'pro' | 'basico';
 
 export type Profile = {
@@ -28,6 +24,7 @@ export type Local = {
   lat: number;
   lng: number;
   barrio?: string;
+  ciudad?: string;
   tags?: string[];
   tiene_delivery?: boolean;
   verificado?: boolean;
@@ -65,11 +62,12 @@ export type Promocion = {
   tipo: 'descuento' | 'combo' | '2x1' | 'envio_gratis' | 'publicidad' | 'destacado';
   visibilidad: 'todos' | 'pro';
   activo?: boolean;
+  activa?: boolean; 
   codigo_descuento?: string;
   descuento_porcentaje?: number;
   fecha_fin?: string;
   orden?: number;
-  local?: Partial<Local>; // Permite traer datos del local unido a la promo
+  local?: Partial<Local>;
 };
 
 export type Resena = {
@@ -79,5 +77,5 @@ export type Resena = {
   calificacion: number;
   comentario?: string;
   aprobada: boolean;
-  profiles?: Partial<Profile>; // Para cuando traemos el nombre de quien comentó
+  profiles?: Partial<Profile>;
 };
