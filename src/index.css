@@ -1,38 +1,55 @@
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap');
-
+/* Colores de tu marca */
 :root {
-  --blue: #0a4da6;
-  --orange: #f2811d;
-  --gold: #f2b749;
-  --cream: #f2ebdc;
-  --red: #731702;
-  --green: #1a6b35;
-  --blue-shadow: rgba(10, 77, 166, 0.2);
+  --blue: #365B73;
+  --teal: #60A6A6;
+  --olive: #98A665;
+  --light-olive: #B6BF73;
+  --cream: #F2F2F2;
+  --dark: #1A1A1A;
 }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  margin: 0;
-  background-color: var(--cream);
-  color: #333;
   font-family: 'Plus Jakarta Sans', sans-serif;
-  -webkit-font-smoothing: antialiased;
+  background-color: var(--cream);
+  color: var(--dark); /* Texto oscuro para legibilidad */
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Syne', sans-serif;
-  font-weight: 700;
-  margin: 0 0 1rem;
+/* Arreglo del Mapa */
+.leaflet-container {
+  width: 100%;
+  height: calc(100vh - 120px); /* Ajuste para las barras */
+  z-index: 1;
 }
 
-.bg-blue { background-color: var(--blue); }
-.text-cream { color: var(--cream); }
-.btn {
+/* Botones legibles */
+.btn-primary {
+  background-color: var(--blue);
+  color: white !important;
   padding: 10px 20px;
   border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
+  font-weight: bold;
   border: none;
-  text-decoration: none;
-  display: inline-block;
 }
-.btn-primary { background-color: var(--orange); color: white; }
+
+/* Barras de navegación */
+.header, .bottom-nav {
+  background-color: var(--blue);
+  color: white;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px;
+}
+
+.nav-item {
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.nav-item.active { color: white; font-weight: bold; }
