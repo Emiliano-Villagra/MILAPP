@@ -25,6 +25,7 @@ export type Local = {
   lng: number;
   barrio?: string;
   ciudad?: string;
+  provincia?: string;
   tags?: string[];
   tiene_delivery?: boolean;
   verificado?: boolean;
