@@ -1,23 +1,18 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
-import './MapaPage.css';
-
-// Arreglo temporal de íconos para Leaflet en React
-import icon from 'leaflet/dist/images/marker-icon.png';
-import iconShadow from 'leaflet/dist/images/marker-shadow.png';
-let DefaultIcon = L.icon({ iconUrl: icon, shadowUrl: iconShadow, iconAnchor: [12, 41] });
-L.Marker.prototype.options.icon = DefaultIcon;
+import 'leaflet/dist/leaflet.css'; // CRITICO PARA QUE SE VEA BIEN
 
 export default function MapaPage() {
+  const position: [number, number] = [-26.8241, -65.2226]; // Tucumán
+
   return (
-    <div className="map-container">
-      <MapContainer center={[-26.83, -65.2]} zoom={14} style={{ height: '100%', width: '100%' }}>
-        <TileLayer url="https://{s}.basemaps.cartocdn.com/voyager/{z}/{x}/{y}{r}.png" />
-        <Marker position={[-26.82, -65.19]}>
-          <Popup><b>El Gringo Sanguchería</b><br/>Av. Mate de Luna 123</Popup>
-        </Marker>
-      </MapContainer>
-    </div>
+    <MapContainer center={position} zoom={13} scrollWheelZoom={true}>
+      <TileLayer
+        attribution='&copy; OpenStreetMap contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      <Marker position={position}>
+        <Popup>¡MILAPP Tucumán!</Popup>
+      </Marker>
+    </MapContainer>
   );
 }
