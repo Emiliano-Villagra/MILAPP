@@ -1,78 +1,168 @@
-.page { padding: 20px 16px; max-width: 480px; margin: 0 auto; }
-
-.noAuth {
-  display: flex; flex-direction: column; align-items: center;
-  text-align: center; padding: 60px 20px; gap: 12px;
+.page {
+  padding: 24px 16px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 480px;
+  margin: 0 auto;
 }
-.noAuthIcon { color: var(--c-text3); margin-bottom: 8px; }
-.noAuth h2 { font-family: var(--font-display); font-size: 1.3rem; color: var(--c-text); }
-.noAuth p { font-size: 0.85rem; color: var(--c-text3); max-width: 280px; }
+
+/* ── No auth ── */
+.noAuth {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 60px 24px;
+  gap: 12px;
+  text-align: center;
+}
+.noAuthEmoji { font-size: 4rem; }
+.noAuth h2 { font-size: 1.2rem; color: var(--c-text); }
+.noAuth p { font-size: 0.9rem; color: var(--c-text3); }
 .loginBtn {
   margin-top: 8px;
-  padding: 12px 24px;
-  background: var(--c-gold);
-  color: var(--c-bg);
-  border: none; border-radius: var(--r-sm);
-  font-family: var(--font-body); font-weight: 700; font-size: 0.9rem;
+  padding: 12px 32px;
+  background: var(--c-blue);
+  color: var(--c-text);
+  border: none; border-radius: var(--r-md);
+  font-size: 0.95rem; font-weight: 600;
   cursor: pointer;
 }
 
-.card {
-  display: flex; flex-direction: column; align-items: center;
-  padding: 24px;
-  background: var(--c-surface);
+/* ── Hero ── */
+.hero {
+  background: var(--c-bg1);
   border: 1px solid var(--c-border);
   border-radius: var(--r-xl);
-  margin-bottom: 16px;
-  gap: 6px;
+  padding: 24px 20px;
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
 }
+
 .avatar {
-  width: 64px; height: 64px;
-  background: var(--c-gold);
-  color: var(--c-bg);
+  width: 72px; height: 72px;
   border-radius: 50%;
+  background: linear-gradient(135deg, var(--c-blue), var(--c-blue-lit));
+  color: white;
+  font-family: 'Fraunces', serif;
+  font-size: 1.8rem; font-weight: 700;
   display: flex; align-items: center; justify-content: center;
-  font-size: 1.5rem; font-weight: 700;
-  margin-bottom: 4px;
-}
-.nombre { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; }
-.email { font-size: 0.8rem; color: var(--c-text3); }
-.roleBadge {
-  display: flex; align-items: center; gap: 4px;
-  font-size: 0.72rem; font-family: var(--font-mono);
-  text-transform: uppercase; letter-spacing: 0.06em;
-  padding: 3px 10px;
-  border: 1px solid;
-  border-radius: var(--r-full);
-  margin-top: 4px;
+  border: 3px solid var(--c-gold);
+  box-shadow: var(--shadow-gold);
 }
 
-.upgradeCard {
-  display: flex; gap: 14px; align-items: flex-start;
-  padding: 14px;
-  background: var(--c-gold-dim);
+.nameWrap {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  width: 100%;
+}
+
+.nameDisplay {
+  display: flex; align-items: center; gap: 8px;
+}
+.name {
+  font-size: 1.15rem; font-weight: 700; color: var(--c-text);
+}
+.editBtn {
+  background: none; border: none;
+  color: var(--c-text3); cursor: pointer;
+  display: flex; align-items: center;
+  padding: 4px;
+  transition: color var(--t-fast);
+}
+.editBtn:hover { color: var(--c-gold); }
+
+.nameEdit {
+  display: flex; align-items: center; gap: 6px;
+  width: 100%;
+}
+.nameInput {
+  flex: 1;
+  padding: 8px 12px;
+  background: var(--c-bg2);
   border: 1px solid var(--c-gold);
-  border-radius: var(--r-md);
-  margin-bottom: 16px;
+  border-radius: var(--r-sm);
+  color: var(--c-text);
+  font-size: 0.95rem;
+  outline: none;
+  text-align: center;
 }
-.upgradeIcon { color: var(--c-gold); flex-shrink: 0; margin-top: 2px; }
-.upgradeCard strong { display: block; color: var(--c-gold); font-size: 0.9rem; margin-bottom: 4px; }
-.upgradeCard p { font-size: 0.8rem; color: var(--c-text2); }
+.editActionBtn {
+  display: flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px;
+  border-radius: var(--r-sm);
+  background: var(--c-bg3); border: 1px solid var(--c-border2);
+  color: var(--c-text2); cursor: pointer;
+  transition: all var(--t-fast);
+  flex-shrink: 0;
+}
+.editActionBtn:hover { border-color: var(--c-gold); color: var(--c-gold); }
+.editActionBtn:disabled { opacity: 0.5; }
 
-.menu {
-  display: flex; flex-direction: column; gap: 6px;
+.email { font-size: 0.82rem; color: var(--c-text3); }
+
+.roleBadge {
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem; font-weight: 600;
+  background: var(--c-bg3);
+  border: 1px solid var(--c-border2);
+  color: var(--c-text2);
 }
-.menuItem {
-  display: flex; align-items: center; gap: 12px;
-  padding: 13px 16px;
-  background: var(--c-surface);
+.roleBadge[data-role="superadmin"] {
+  background: rgba(10,77,166,0.2);
+  border-color: rgba(10,77,166,0.4);
+  color: #5B9BED;
+}
+.roleBadge[data-role="pro"] {
+  background: rgba(242,183,73,0.15);
+  border-color: rgba(242,183,73,0.3);
+  color: var(--c-gold);
+}
+
+/* ── Stats ── */
+.stats {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+}
+
+.statCard {
+  background: var(--c-bg1);
   border: 1px solid var(--c-border);
   border-radius: var(--r-md);
-  color: var(--c-text2);
-  font-family: var(--font-body); font-size: 0.9rem; font-weight: 500;
-  cursor: pointer; text-align: left; width: 100%;
+  padding: 16px 12px;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  cursor: default;
+  transition: border-color var(--t-fast);
+}
+.statCard:hover { border-color: var(--c-border2); }
+
+.proCard { cursor: pointer; }
+.proCard:hover { border-color: var(--c-gold); }
+
+.statIcon { color: var(--c-text3); }
+.statIconGold { color: var(--c-gold); }
+.statLabel { font-size: 0.75rem; color: var(--c-text3); font-weight: 500; }
+
+/* ── Buttons ── */
+.adminBtn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 13px;
+  background: var(--c-bg1);
+  border: 1px solid var(--c-blue);
+  border-radius: var(--r-md);
+  color: #5B9BED;
+  font-size: 0.9rem; font-weight: 600;
+  cursor: pointer;
   transition: all var(--t-fast);
 }
-.menuItem:hover { border-color: var(--c-gold); color: var(--c-text); }
-.menuItem.danger { color: var(--c-red); }
-.menuItem.danger:hover { border-color: var(--c-red); background: var(--c-red-dim); }
+.adminBtn:hover { background: rgba(10,77,166,0.1); }
+
+.logoutBtn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 13px;
+  background: var(--c-bg1);
+  border: 1px solid rgba(231,76,60,0.3);
+  border-radius: var(--r-md);
+  color: #E74C3C;
+  font-size: 0.9rem; font-weight: 600;
+  cursor: pointer;
+  transition: all var(--t-fast);
+  margin-top: 8px;
+}
+.logoutBtn:hover { background: rgba(231,76,60,0.08); }

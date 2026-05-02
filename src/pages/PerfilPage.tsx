@@ -1,37 +1,124 @@
-import { useAppStore } from '@/store/appStore';
-import { supabase } from '@/lib/supabase';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { supabase } from '@/lib/supabase'
+import { useAppStore } from '@/store/appStore'
+import { User, LogOut, Settings, Edit2, Check, X, Star, Heart, Crown } from 'lucide-react'
+import styles from './PerfilPage.module.css'
+
+const ROLE_LABELS: Record<string, string> = {
+  superadmin: '⚙️ Superadmin',
+  pro: '⭐ Pro',
+  basico: '🥩 Básico',
+}
 
 export default function PerfilPage() {
-  const { profile, signOut } = useAppStore();
-  const navigate = useNavigate();
+  const { profile, user, signOut, setProfile } = useAppStore()
+  const navigate = useNavigate()
+
+  const [editingNombre, setEditingNombre] = useState(false)
+  const [nombre, setNombre] = useState(profile?.nombre ?? '')
+  const [saving, setSaving] = useState(false)
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    signOut();
-    navigate('/');
-  };
+    await supabase.auth.signOut()
+    signOut()
+    navigate('/')
+  }
+
+  const saveNombre = async () => {
+    if (!profile) return
+    setSaving(true)
+    await supabase.from('profiles').update({ nombre }).eq('id', profile.id)
+    setProfile({ ...profile, nombre })
+    setSaving(false)
+    setEditingNombre(false)
+  }
+
+  if (!user) {
+    return (
+      <div className={styles.noAuth}>
+        <span className={styles.noAuthEmoji}>🥩</span>
+        <h2>Todavía no ingresaste</h2>
+        <p>Iniciá sesión para ver tu perfil</p>
+        <button className={styles.loginBtn} onClick={() => navigate('/auth')}>
+          Ingresar
+        </button>
+      </div>
+    )
+  }
+
+  const avatarLetter = profile?.nombre?.[0]?.toUpperCase() ?? user.email?.[0]?.toUpperCase() ?? '?'
 
   return (
-    <div style={{ padding: '20px', color: 'var(--dark)' }}>
-      <h1 style={{ marginBottom: '20px', fontFamily: 'Syne' }}>Mi Perfil</h1>
-      
-      <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '12px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
-        <p><strong>Nombre:</strong> {profile?.nombre || 'No asignado'}</p>
-        <p><strong>Email:</strong> {profile?.email}</p>
-        <p><strong>Rol:</strong> <span style={{ color: 'var(--blue)', fontWeight: 'bold' }}>{profile?.role}</span></p>
+    <div className={styles.page}>
+      {/* Avatar + info */}
+      <div className={styles.hero}>
+        <div className={styles.avatar}>{avatarLetter}</div>
+
+        <div className={styles.nameWrap}>
+          {editingNombre ? (
+            <div className={styles.nameEdit}>
+              <input
+                className={styles.nameInput}
+                value={nombre}
+                onChange={e => setNombre(e.target.value)}
+                autoFocus
+                onKeyDown={e => { if (e.key === 'Enter') saveNombre(); if (e.key === 'Escape') setEditingNombre(false) }}
+              />
+              <button className={styles.editActionBtn} onClick={saveNombre} disabled={saving}>
+                <Check size={16} />
+              </button>
+              <button className={styles.editActionBtn} onClick={() => setEditingNombre(false)}>
+                <X size={16} />
+              </button>
+            </div>
+          ) : (
+            <div className={styles.nameDisplay}>
+              <h2 className={styles.name}>{profile?.nombre || 'Sin nombre'}</h2>
+              <button className={styles.editBtn} onClick={() => setEditingNombre(true)}>
+                <Edit2 size={14} />
+              </button>
+            </div>
+          )}
+          <span className={styles.email}>{user.email}</span>
+        </div>
+
+        <div className={styles.roleBadge} data-role={profile?.role}>
+          {ROLE_LABELS[profile?.role ?? 'basico'] ?? profile?.role}
+        </div>
       </div>
 
-      <button 
-        onClick={handleLogout}
-        style={{ 
-          marginTop: '30px', width: '100%', padding: '15px', 
-          backgroundColor: '#e74c3c', color: 'white', border: 'none', 
-          borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' 
-        }}
-      >
-        Cerrar Sesión
+      {/* Stats (placeholders) */}
+      <div className={styles.stats}>
+        <div className={styles.statCard}>
+          <Heart size={20} className={styles.statIcon} />
+          <span className={styles.statLabel}>Favoritos</span>
+        </div>
+        <div className={styles.statCard}>
+          <Star size={20} className={styles.statIcon} />
+          <span className={styles.statLabel}>Reseñas</span>
+        </div>
+        {profile?.role !== 'pro' && profile?.role !== 'superadmin' && (
+          <div className={`${styles.statCard} ${styles.proCard}`}>
+            <Crown size={20} className={styles.statIconGold} />
+            <span className={styles.statLabel}>Ir PRO</span>
+          </div>
+        )}
+      </div>
+
+      {/* Admin shortcut */}
+      {profile?.role === 'superadmin' && (
+        <button className={styles.adminBtn} onClick={() => navigate('/admin')}>
+          <Settings size={16} />
+          Panel de administración
+        </button>
+      )}
+
+      {/* Logout */}
+      <button className={styles.logoutBtn} onClick={handleLogout}>
+        <LogOut size={16} />
+        Cerrar sesión
       </button>
     </div>
-  );
+  )
 }

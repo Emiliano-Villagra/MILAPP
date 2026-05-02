@@ -1,4 +1,142 @@
-/* milapp/src/pages/PromosPage.module.css */
-.pageWrapper {
-  padding: 20px;
+.page {
+  padding: 20px 16px 32px;
+  display: flex; flex-direction: column; gap: 16px;
+  max-width: 600px; margin: 0 auto;
 }
+
+.loadingWrap {
+  display: flex; align-items: center; justify-content: center;
+  height: 100%; min-height: 300px;
+}
+
+.pageHeader {
+  display: flex; align-items: flex-start; justify-content: space-between;
+}
+.pageTitle {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 1.6rem; font-weight: 700;
+  color: var(--c-text);
+}
+.pageSub { font-size: 0.85rem; color: var(--c-text3); margin-top: 2px; }
+
+.proBadge {
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 12px; border-radius: 20px;
+  background: rgba(242,183,73,0.12);
+  border: 1px solid rgba(242,183,73,0.3);
+  color: var(--c-gold);
+  font-size: 0.78rem; font-weight: 700;
+}
+
+.proBanner {
+  display: flex; align-items: center; gap: 12px;
+  background: rgba(242,183,73,0.06);
+  border: 1px solid rgba(242,183,73,0.2);
+  border-radius: var(--r-lg);
+  padding: 14px 16px;
+}
+.proIcon { color: var(--c-gold); flex-shrink: 0; }
+.proBanner > div { flex: 1; }
+.proBanner strong { font-size: 0.9rem; color: var(--c-gold); }
+.proBanner p { font-size: 0.78rem; color: var(--c-text3); margin-top: 2px; }
+.proBtn {
+  padding: 7px 14px;
+  background: var(--c-gold);
+  color: var(--c-bg);
+  border: none; border-radius: var(--r-sm);
+  font-size: 0.8rem; font-weight: 700;
+  cursor: pointer; flex-shrink: 0;
+}
+
+.emptyState {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 60px 20px; gap: 10px; text-align: center;
+}
+.emptyState span { font-size: 4rem; }
+.emptyState h3 { font-size: 1.1rem; color: var(--c-text); }
+.emptyState p { font-size: 0.85rem; color: var(--c-text3); }
+
+.promoList { display: flex; flex-direction: column; gap: 12px; }
+
+.promoCard {
+  background: var(--c-bg1);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  position: relative;
+  transition: border-color var(--t-fast);
+}
+.promoCard:hover { border-color: var(--c-border2); }
+.promoCard.locked { opacity: 0.75; }
+
+.proLabel {
+  position: absolute; top: 10px; right: 10px;
+  display: flex; align-items: center; gap: 4px;
+  padding: 3px 8px; border-radius: 10px;
+  background: rgba(242,183,73,0.9);
+  color: var(--c-bg);
+  font-size: 0.72rem; font-weight: 700;
+}
+
+.promoImg {
+  width: 100%; height: 160px;
+  object-fit: cover;
+}
+
+.promoBody {
+  padding: 14px 16px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+
+.tipoRow {
+  display: flex; align-items: center; gap: 8px;
+}
+.tipoIcon { font-size: 1.1rem; }
+.tipoText {
+  font-size: 0.75rem; font-weight: 600;
+  color: var(--c-text3);
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.discountBadge {
+  padding: 2px 8px; border-radius: 10px;
+  background: rgba(242,129,29,0.2);
+  border: 1px solid rgba(242,129,29,0.3);
+  color: var(--c-orange);
+  font-size: 0.75rem; font-weight: 700;
+}
+
+.promoTitle { font-size: 1rem; font-weight: 700; color: var(--c-text); }
+.promoDesc { font-size: 0.85rem; color: var(--c-text2); line-height: 1.5; }
+
+.lockedMsg {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 0.8rem; color: var(--c-gold);
+  font-style: italic;
+}
+
+.localRow, .fechaRow {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 0.78rem; color: var(--c-text3);
+}
+
+.codigoWrap {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 12px;
+  background: var(--c-bg3);
+  border: 1px dashed var(--c-border2);
+  border-radius: var(--r-sm);
+  font-size: 0.82rem; color: var(--c-text2);
+}
+.codigo { font-weight: 700; letter-spacing: 1px; color: var(--c-text); }
+
+.verLocalBtn {
+  padding: 9px;
+  background: var(--c-blue);
+  color: var(--c-text);
+  border: none; border-radius: var(--r-sm);
+  font-size: 0.85rem; font-weight: 600;
+  cursor: pointer;
+  transition: background var(--t-fast);
+}
+.verLocalBtn:hover { background: var(--c-blue-lit); }
