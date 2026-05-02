@@ -1,55 +1,151 @@
-/* Colores de tu marca */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@1,400;1,700;1,900&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+
+/* ============================================================
+   MILAPP — Design System
+   ============================================================ */
 :root {
-  --blue: #365B73;
-  --teal: #60A6A6;
-  --olive: #98A665;
-  --light-olive: #B6BF73;
-  --cream: #F2F2F2;
-  --dark: #1A1A1A;
+  /* Brand */
+  --c-blue:      #0A4DA6;
+  --c-blue-lit:  #1560C7;
+  --c-gold:      #F2B749;
+  --c-orange:    #F2811D;
+  --c-cream:     #F2EBDC;
+  --c-wine:      #731702;
+
+  /* Background levels */
+  --c-bg:        #080810;
+  --c-bg1:       #0F0F1A;
+  --c-bg2:       #161624;
+  --c-bg3:       #1E1E30;
+
+  /* Text */
+  --c-text:      #F2EBDC;
+  --c-text2:     #A0A0B8;
+  --c-text3:     #5A5A72;
+
+  /* Borders */
+  --c-border:    #1E1E30;
+  --c-border2:   #2A2A40;
+
+  /* Feedback */
+  --c-success:   #2ECC71;
+  --c-error:     #E74C3C;
+
+  /* Radii */
+  --r-sm:  8px;
+  --r-md:  12px;
+  --r-lg:  18px;
+  --r-xl:  24px;
+
+  /* Shadows */
+  --shadow-sm:  0 2px 8px rgba(0,0,0,0.4);
+  --shadow-md:  0 4px 20px rgba(0,0,0,0.5);
+  --shadow-lg:  0 8px 40px rgba(0,0,0,0.6);
+  --shadow-gold: 0 0 20px rgba(242,183,73,0.2);
+  --shadow-blue: 0 4px 20px rgba(10,77,166,0.4);
+
+  /* Transitions */
+  --t-fast:   0.15s ease;
+  --t-normal: 0.25s ease;
+  --t-slow:   0.4s ease;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { -webkit-tap-highlight-color: transparent; }
 
 body {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  background-color: var(--cream);
-  color: var(--dark); /* Texto oscuro para legibilidad */
+  font-family: 'DM Sans', sans-serif;
+  background: var(--c-bg);
+  color: var(--c-text);
+  line-height: 1.5;
+  min-height: 100dvh;
+  overscroll-behavior: none;
 }
 
-/* Arreglo del Mapa */
+/* ── Leaflet overrides ───────────────────────────── */
 .leaflet-container {
-  width: 100%;
-  height: calc(100vh - 120px); /* Ajuste para las barras */
-  z-index: 1;
+  background: var(--c-bg1) !important;
+  font-family: 'DM Sans', sans-serif;
+}
+.leaflet-control-attribution { display: none !important; }
+.leaflet-control-zoom {
+  border: 1px solid var(--c-border2) !important;
+  border-radius: var(--r-sm) !important;
+  overflow: hidden;
+  box-shadow: var(--shadow-md) !important;
+}
+.leaflet-control-zoom a {
+  background: var(--c-bg2) !important;
+  color: var(--c-text) !important;
+  border-color: var(--c-border2) !important;
+  width: 32px !important;
+  height: 32px !important;
+  line-height: 30px !important;
+  font-size: 16px !important;
+}
+.leaflet-control-zoom a:hover {
+  background: var(--c-bg3) !important;
+  color: var(--c-gold) !important;
 }
 
-/* Botones legibles */
-.btn-primary {
-  background-color: var(--blue);
-  color: white !important;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: bold;
-  border: none;
+/* ── Custom marker ───────────────────────────────── */
+.mila-marker {
+  background: var(--c-gold);
+  color: var(--c-bg);
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+  box-shadow: 0 2px 10px rgba(242,183,73,0.5);
+  border: 2px solid var(--c-bg);
+  cursor: pointer;
+  transition: transform var(--t-fast);
+}
+.mila-marker span { transform: rotate(45deg); display: block; }
+.mila-marker.selected {
+  background: var(--c-orange);
+  transform: rotate(-45deg) scale(1.25);
+  z-index: 1000 !important;
+}
+.mila-marker.verified { background: var(--c-blue); }
+.mila-marker.verified.selected { background: var(--c-blue-lit); }
+
+/* ── Scrollbar ───────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--c-border2); border-radius: 2px; }
+
+/* ── Animations ──────────────────────────────────── */
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
 }
 
-/* Barras de navegación */
-.header, .bottom-nav {
-  background-color: var(--blue);
-  color: white;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding: 10px;
-}
+.animate-slide-up { animation: slideUp 0.3s cubic-bezier(0.32, 0.72, 0, 1); }
+.animate-fade-in  { animation: fadeIn 0.3s ease; }
 
-.nav-item {
-  color: rgba(255,255,255,0.7);
-  text-decoration: none;
-  font-size: 12px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+/* ── Utilities ───────────────────────────────────── */
+.spinner {
+  width: 28px; height: 28px;
+  border: 3px solid var(--c-border2);
+  border-top-color: var(--c-gold);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
 }
-
-.nav-item.active { color: white; font-weight: bold; }
+.loading-center {
+  display: flex; align-items: center; justify-content: center;
+  height: 100%; min-height: 200px;
+}
