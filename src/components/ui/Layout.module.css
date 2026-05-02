@@ -1,120 +1,14 @@
-/* milapp/src/components/ui/Layout.module.css */
-.wrapper {
+.shell {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100dvh;
+  background: var(--c-bg);
+  overflow: hidden;
 }
 
-/* Header mobile */
-.header {
-  height: 54px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 16px;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 100;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.logo {
-  font-family: 'Syne', sans-serif;
-  font-weight: 800;
-  font-size: 20px;
-}
-
-/* Sidebar desktop */
-.sidebar {
-  display: none;
-}
-
-.mainContent {
-  flex-grow: 1;
-  padding: 70px 16px 80px; /* Padding top y bottom para navs */
-}
-
-/* Bottom Nav mobile */
-.bottomNav {
-  height: 64px;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  z-index: 100;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.bottomNavItem {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-decoration: none;
-  color: var(--cream);
-  opacity: 0.8;
-  font-size: 12px;
-}
-
-.bottomNavIcon {
-  font-size: 24px;
-  margin-bottom: 2px;
-}
-
-.bottomNavItemActive {
-  opacity: 1;
-  color: var(--gold);
-}
-
-/* Desktop media query */
-@media (min-width: 1024px) {
-  .header,
-  .bottomNav {
-    display: none;
-  }
-
-  .sidebar {
-    display: flex;
-    flex-direction: column;
-    width: 210px;
-    height: 100vh;
-    position: fixed;
-    top: 0;
-    left: 0;
-    padding: 20px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-  }
-
-  .desktopNav {
-    margin-top: 40px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .navItem {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    color: var(--cream);
-    padding: 10px;
-    border-radius: 8px;
-    transition: background-color 0.2s;
-  }
-
-  .navItem:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-  }
-
-  .navItemActive {
-    color: var(--orange);
-    font-weight: 700;
-  }
-
-  .mainContent {
-    margin-left: 210px;
-    padding: 20px;
-  }
+.main {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
 }
