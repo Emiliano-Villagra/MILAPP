@@ -4,7 +4,7 @@ import { supabase, type Local, type Producto } from '@/lib/supabase'
 import { useAppStore } from '@/store/appStore'
 import { getDirectionsUrl, formatDistance, formatHorario, isAbierto } from '@/lib/utils'
 import {
-  X, Navigation, Phone, Instagram, Bike,
+  X, Navigation, Phone, Instagram, Bike, Globe,
   BadgeCheck, Star, Clock, MapPin, Heart, ChevronRight, Send
 } from 'lucide-react'
 import styles from './LocalDrawer.module.css'
@@ -25,32 +25,26 @@ export default function LocalDrawer({ local, onClose }: Props) {
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
 
-  const profile = useAppStore((s) => s.profile)
+  const profile = useAppStore(s => s.profile)
   const navigate = useNavigate()
   const abierto = isAbierto(local.horario_apertura, local.horario_cierre, local.dias_abierto)
 
   useEffect(() => {
     setTab('info')
-    setMyRating(0)
-    setMyComment('')
-    setSubmitted(false)
+    setMyRating(0); setMyComment(''); setSubmitted(false)
 
-    supabase.from('productos')
-      .select('*').eq('local_id', local.id).eq('disponible', true)
+    supabase.from('productos').select('*').eq('local_id', local.id).eq('disponible', true)
       .then(({ data }) => setProductos((data as Producto[]) ?? []))
 
-    supabase.from('resenas')
-      .select('*, profiles(nombre)')
-      .eq('local_id', local.id)
-      .eq('aprobada', true)
+    supabase.from('resenas').select('*, profiles(nombre)')
+      .eq('local_id', local.id).eq('aprobada', true)
       .order('created_at', { ascending: false })
       .then(({ data }) => setResenas(data ?? []))
 
     if (profile) {
-      supabase.from('favoritos')
-        .select('id').eq('user_id', profile.id).eq('local_id', local.id)
-        .maybeSingle()
-        .then(({ data }) => setIsFav(!!data))
+      supabase.from('favoritos').select('id')
+        .eq('user_id', profile.id).eq('local_id', local.id)
+        .maybeSingle().then(({ data }) => setIsFav(!!data))
     }
   }, [local.id, profile])
 
@@ -58,28 +52,24 @@ export default function LocalDrawer({ local, onClose }: Props) {
     if (!profile) { navigate('/auth'); return }
     if (isFav) {
       await supabase.from('favoritos').delete().eq('user_id', profile.id).eq('local_id', local.id)
-      setIsFav(false)
     } else {
       await supabase.from('favoritos').insert({ user_id: profile.id, local_id: local.id })
-      setIsFav(true)
     }
+    setIsFav(!isFav)
   }
 
   const submitResena = async () => {
     if (!profile || myRating === 0) return
     setSubmitting(true)
     await supabase.from('resenas').upsert({
-      local_id: local.id,
-      user_id: profile.id,
-      calificacion: myRating,
-      comentario: myComment || null,
-      aprobada: false,
+      local_id: local.id, user_id: profile.id,
+      calificacion: myRating, comentario: myComment || null, aprobada: false,
     })
     setSubmitting(false)
     setSubmitted(true)
   }
 
-  const renderStars = (rating: number, size = 14) =>
+  const stars = (rating: number, size = 14) =>
     [1, 2, 3, 4, 5].map(i => (
       <Star key={i} size={size}
         fill={i <= rating ? 'currentColor' : 'none'}
@@ -91,21 +81,26 @@ export default function LocalDrawer({ local, onClose }: Props) {
     <>
       <div className={styles.backdrop} onClick={onClose} />
       <div className={`${styles.drawer} animate-slide-up`}>
-        <div className={styles.handleBar} />
+        <div className={styles.handle} onClick={onClose} />
 
+        {/* ── Header ── */}
         <div className={styles.header}>
           <div className={styles.headerTop}>
             <div className={styles.headerInfo}>
               <h2 className={styles.nombre}>{local.nombre}</h2>
-              <div className={styles.headerMeta}>
+              <div className={styles.metaBadges}>
                 {local.verificado && (
-                  <span className={styles.verified}><BadgeCheck size={12} /> Verificado</span>
+                  <span className={styles.badge} data-type="verified">
+                    <BadgeCheck size={11} /> Verificado
+                  </span>
                 )}
-                <span className={`${styles.status} ${abierto ? styles.open : styles.closed}`}>
+                <span className={`${styles.badge} ${abierto ? styles.open : styles.closed}`}>
                   <Clock size={11} /> {abierto ? 'Abierto' : 'Cerrado'}
                 </span>
                 {local.tiene_delivery && (
-                  <span className={styles.deliveryBadge}><Bike size={11} /> Delivery</span>
+                  <span className={styles.badge} data-type="delivery">
+                    <Bike size={11} /> Delivery
+                  </span>
                 )}
               </div>
             </div>
@@ -119,102 +114,128 @@ export default function LocalDrawer({ local, onClose }: Props) {
             </div>
           </div>
 
-          {local.calificacion_promedio > 0 && (
+          {(local.calificacion_promedio ?? 0) > 0 && (
             <div className={styles.ratingRow}>
-              <div className={styles.stars}>{renderStars(Math.round(local.calificacion_promedio))}</div>
-              <span className={styles.ratingVal}>{local.calificacion_promedio.toFixed(1)}</span>
+              <div className={styles.starsRow}>{stars(Math.round(local.calificacion_promedio ?? 0))}</div>
+              <span className={styles.ratingVal}>{local.calificacion_promedio?.toFixed(1)}</span>
               <span className={styles.ratingCount}>({local.total_resenas} opiniones)</span>
             </div>
           )}
 
+          {/* CTAs */}
           <div className={styles.ctas}>
             <button className={styles.ctaPrimary}
-              onClick={() => window.open(getDirectionsUrl(local.lat, local.lng, local.nombre), '_blank')}>
+              onClick={() => window.open(getDirectionsUrl(local.lat, local.lng), '_blank')}>
               <Navigation size={15} /> Cómo llegar
             </button>
             {local.telefono && (
-              <a href={`tel:${local.telefono}`} className={styles.ctaIcon}><Phone size={15} /></a>
+              <a href={`tel:${local.telefono}`} className={styles.ctaIcon}><Phone size={16} /></a>
             )}
             {local.whatsapp && (
               <a href={`https://wa.me/${local.whatsapp.replace(/\D/g, '')}`}
-                target="_blank" rel="noreferrer" className={`${styles.ctaIcon} ${styles.ctaWa}`}>WA</a>
+                target="_blank" rel="noreferrer" className={`${styles.ctaIcon} ${styles.ctaWa}`}>
+                WA
+              </a>
             )}
             {local.instagram && (
               <a href={`https://instagram.com/${local.instagram.replace('@', '')}`}
-                target="_blank" rel="noreferrer" className={styles.ctaIcon}><Instagram size={15} /></a>
+                target="_blank" rel="noreferrer" className={styles.ctaIcon}>
+                <Instagram size={16} />
+              </a>
+            )}
+            {local.sitio_web && (
+              <a href={local.sitio_web} target="_blank" rel="noreferrer" className={styles.ctaIcon}>
+                <Globe size={16} />
+              </a>
             )}
           </div>
 
+          {/* Tabs */}
           <div className={styles.tabs}>
-            <button className={`${styles.tab} ${tab === 'info' ? styles.tabActive : ''}`}
-              onClick={() => setTab('info')}>Info</button>
-            <button className={`${styles.tab} ${tab === 'resenas' ? styles.tabActive : ''}`}
-              onClick={() => setTab('resenas')}>
-              Opiniones {resenas.length > 0 && `(${resenas.length})`}
-            </button>
+            {(['info', 'resenas'] as const).map(t => (
+              <button key={t}
+                className={`${styles.tab} ${tab === t ? styles.tabActive : ''}`}
+                onClick={() => setTab(t)}>
+                {t === 'info' ? 'Info' : `Opiniones${resenas.length > 0 ? ` (${resenas.length})` : ''}`}
+              </button>
+            ))}
           </div>
         </div>
 
+        {/* ── Body ── */}
         <div className={styles.body}>
           {tab === 'info' && (
-            <>
-              <div className={styles.addrRow}>
-                <MapPin size={14} className={styles.addrIcon} />
+            <div className={styles.infoTab}>
+              <div className={styles.row}>
+                <MapPin size={14} className={styles.rowIcon} />
                 <div>
-                  <p className={styles.addr}>{local.direccion}</p>
-                  {local.barrio && <p className={styles.barrio}>{local.barrio}</p>}
-                  {local.distancia != null && <p className={styles.dist}>📍 {formatDistance(local.distancia)}</p>}
+                  <p className={styles.rowMain2}>{local.direccion}</p>
+                  {local.barrio && <p className={styles.rowSub}>{local.barrio}</p>}
+                  {local.distancia != null && (
+                    <p className={styles.dist}>📍 {formatDistance(local.distancia)}</p>
+                  )}
                 </div>
               </div>
+
               {local.horario_apertura && (
-                <div className={styles.addrRow}>
-                  <Clock size={14} className={styles.addrIcon} />
-                  <p className={styles.addr}>{formatHorario(local.horario_apertura, local.horario_cierre)}</p>
+                <div className={styles.row}>
+                  <Clock size={14} className={styles.rowIcon} />
+                  <p className={styles.rowMain2}>
+                    {formatHorario(local.horario_apertura, local.horario_cierre)}
+                  </p>
                 </div>
               )}
+
+              {local.descripcion && <p className={styles.desc}>{local.descripcion}</p>}
+
               {local.tags && local.tags.length > 0 && (
                 <div className={styles.tags}>
                   {local.tags.map(t => <span key={t} className={styles.tag}>{t}</span>)}
                 </div>
               )}
-              {local.descripcion && <p className={styles.desc}>{local.descripcion}</p>}
+
               {productos.length > 0 && (
-                <div className={styles.menu}>
+                <div className={styles.menuSection}>
                   <h3 className={styles.menuTitle}>Menú</h3>
                   {productos.map(p => (
-                    <div key={p.id} className={`${styles.menuItem} ${p.es_destacado ? styles.menuDestacado : ''}`}>
-                      <div>
-                        <span className={styles.menuNombre}>{p.nombre}</span>
-                        {p.descripcion && <span className={styles.menuDesc}>{p.descripcion}</span>}
+                    <div key={p.id} className={`${styles.menuItem} ${p.es_destacado ? styles.highlighted : ''}`}>
+                      <div className={styles.menuItemInfo}>
+                        <span className={styles.menuItemName}>{p.nombre}</span>
+                        {p.descripcion && <span className={styles.menuItemDesc}>{p.descripcion}</span>}
                       </div>
-                      {p.precio && <span className={styles.menuPrecio}>${p.precio.toLocaleString('es-AR')}</span>}
+                      {p.precio && (
+                        <span className={styles.menuItemPrice}>
+                          ${p.precio.toLocaleString('es-AR')}
+                        </span>
+                      )}
                     </div>
                   ))}
                 </div>
               )}
-              <button className={styles.verMas} onClick={() => navigate(`/local/${local.id}`)}>
-                Ver ficha completa <ChevronRight size={15} />
+
+              <button className={styles.verMas} onClick={() => { navigate(`/local/${local.id}`); onClose() }}>
+                Ver ficha completa <ChevronRight size={14} />
               </button>
-            </>
+            </div>
           )}
 
           {tab === 'resenas' && (
-            <>
+            <div className={styles.resenasTab}>
               {profile ? (
                 submitted ? (
                   <div className={styles.submittedMsg}>
-                    ✅ ¡Gracias por tu opinión! Se publicará después de ser revisada.
+                    ✅ ¡Gracias! Tu opinión se publicará después de ser revisada.
                   </div>
                 ) : (
                   <div className={styles.newResena}>
                     <p className={styles.newResenaTitle}>¿Cómo estuvo la mila?</p>
                     <div className={styles.starPicker}>
-                      {[1, 2, 3, 4, 5].map(i => (
+                      {[1,2,3,4,5].map(i => (
                         <button key={i} className={styles.starPickerBtn}
                           onMouseEnter={() => setHoveredStar(i)}
                           onMouseLeave={() => setHoveredStar(0)}
                           onClick={() => setMyRating(i)}>
-                          <Star size={32}
+                          <Star size={30}
                             fill={(hoveredStar || myRating) >= i ? 'currentColor' : 'none'}
                             className={(hoveredStar || myRating) >= i ? styles.starPickerOn : styles.starPickerOff}
                           />
@@ -241,8 +262,8 @@ export default function LocalDrawer({ local, onClose }: Props) {
                   </div>
                 )
               ) : (
-                <button className={styles.loginToReview} onClick={() => navigate('/auth')}>
-                  <Star size={16} /> Ingresá para dejar tu opinión
+                <button className={styles.loginToReview} onClick={() => { navigate('/auth'); onClose() }}>
+                  <Star size={15} /> Ingresá para opinar
                 </button>
               )}
 
@@ -258,15 +279,15 @@ export default function LocalDrawer({ local, onClose }: Props) {
                         </div>
                         <div>
                           <p className={styles.resenaNombre}>{r.profiles?.nombre ?? 'Usuario'}</p>
-                          <div className={styles.resenaStars}>{renderStars(r.calificacion, 12)}</div>
+                          <div className={styles.resenaStars}>{stars(r.calificacion, 12)}</div>
                         </div>
                       </div>
-                      {r.comentario && <p className={styles.resenaComment}>{r.comentario}</p>}
+                      {r.comentario && <p className={styles.resenaComment}>"{r.comentario}"</p>}
                     </div>
                   ))}
                 </div>
               )}
-            </>
+            </div>
           )}
         </div>
       </div>

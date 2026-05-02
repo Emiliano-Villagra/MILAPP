@@ -1,4 +1,4 @@
-import { Search, Bike, BadgeCheck, SlidersHorizontal } from 'lucide-react'
+import { Search, Bike, BadgeCheck, X } from 'lucide-react'
 import { useAppStore } from '@/store/appStore'
 import styles from './MapFilters.module.css'
 
@@ -12,15 +12,20 @@ export default function MapFilters() {
   } = useAppStore()
 
   return (
-    <div className={styles.bar}>
-      <div className={styles.searchWrap}>
+    <div className={styles.wrap}>
+      <div className={styles.searchRow}>
         <Search size={15} className={styles.searchIcon} />
         <input
           className={styles.search}
-          placeholder="Buscar por nombre, barrio, tag..."
+          placeholder="Nombre, barrio o tipo..."
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={e => setSearchQuery(e.target.value)}
         />
+        {searchQuery && (
+          <button className={styles.clearBtn} onClick={() => setSearchQuery('')}>
+            <X size={14} />
+          </button>
+        )}
       </div>
 
       <div className={styles.chips}>
@@ -40,7 +45,7 @@ export default function MapFilters() {
           <select
             className={styles.radioPicker}
             value={radioKm}
-            onChange={(e) => setRadioKm(Number(e.target.value))}
+            onChange={e => setRadioKm(Number(e.target.value))}
           >
             <option value={1}>1 km</option>
             <option value={2}>2 km</option>
